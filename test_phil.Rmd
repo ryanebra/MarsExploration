@@ -1,0 +1,45 @@
+---
+title: "test"
+author: "Farshad Ebrahimi"
+date: "2025-07-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+  # Install required package
+  library(DBI)
+  library(odbc)
+  library(tidyverse)
+  library(sf)
+  library(lubridate)
+  library(knitr)
+  library(digest)
+  library(RPostgres)
+  #Not in logical
+  `%!in%` <- Negate(`%in%`)
+  
+  dataconv <- dbConnect(odbc(),
+    Driver = "ODBC Driver 17 for SQL Server",
+    Server = "pwdgissql",
+    Database = "OWS_GISDATA",
+    uid = "gisread",
+    pwd= "gisread")
+  
+   dataconv_st <- paste0("MSSQL:server=PWDGISSQL;",
+                        "database=OWS_GISDATA;",
+                        "UID=", "gisread", ";",
+                        "PWD=", "gisread", ";")
+  
+```
+
+# Test st-read() on OWS_GISDATA
+
+```{r}
+
+test <- st_read(dataconv_st, "OWS_GISDATA.OWS.GSWI_SMP_Polygons", quiet = TRUE)
+
+test_df <- dbGetQuery(dataconv, SQL("select * from OWS_GISDATA.OWS.GSWI_SMP_Polygons"))
+
+```
+
